@@ -21,8 +21,9 @@ app.use(helmet());
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
-  'https://ai-journal-app-one.vercel.app' 
+  'https://ai-journal-app-phi.vercel.app' // ✅ add this
 ];
+
 
 app.use(cors({
   origin: function (origin, callback) {
