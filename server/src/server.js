@@ -18,23 +18,41 @@ connectDB();
 
 // Security middleware
 app.use(helmet());
+
+// ✅ CORS Configuration
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
-  'https://ai-journal-app-phi.vercel.app' // ✅ add this
+  'https://ai-journal-app-phi.vercel.app'
 ];
-
 
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.log('❌ Blocked by CORS:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true
 }));
+
+// ✅ Optional: Manual fallback CORS middleware (for debugging)
+app.use((req, res, next) => {
+  if (!res.getHeader("Access-Control-Allow-Origin")) {
+    res.setHeader("Access-Control-Allow-Origin", "*"); // ⚠️ For debugging only
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  }
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
+  next();
+});
+
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -46,7 +64,7 @@ app.use(limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Health check endpoint for Render
+// ✅ Health check endpoint (important for Render)
 app.get('/api/health', (req, res) => {
   res.status(200).json({ 
     status: 'OK', 
