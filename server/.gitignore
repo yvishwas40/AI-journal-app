@@ -1,0 +1,22 @@
+# node modules
+node_modules/
+
+# local env files
+.env
+.env.local
+
+# logs
+logs
+*.log
+npm-debug.log*
+
+# video and other media
+*.mp4
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
